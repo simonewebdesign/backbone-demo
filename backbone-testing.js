@@ -194,5 +194,23 @@ define(["jquery", "underscore", "backbone-amd"], function ($, _, Backbone) {
         // render the view
         coolKittenView.render();
         $('#kittens').html(coolKittenView.el);
+
+        // LEVEL 5 and 6 -------------------------------------
+
+        var CoolKittensCollection = Backbone.Collection.extend({
+          model: CoolKitten,
+          url: 'http://localhost:3000/kittens'
+        });
+
+        var aCollection = new CoolKittensCollection();
+        aCollection.fetch({
+          success: function(){
+            console.log('aCollection fetched successfully:');
+            console.log(aCollection); 
+          }
+        });
+
+        // aCollection.forEach()
+
     }
 );
