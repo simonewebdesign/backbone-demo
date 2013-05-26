@@ -43,5 +43,33 @@ define(["jquery", "underscore", "backbone-amd"], function ($, _, Backbone) {
 
         // Re-render the view
         plutoView.render();
+
+        // LEVEL 2 -------------------------------------
+
+        // Set default attributes of a Model
+        var Kitten1 = Backbone.Model.extend({
+          defaults: {
+            name: 'no-name',
+            age: 0,
+            birthday: new Date()
+          }
+        }); // however this won't work.
+        // Every new Appointment you create has the same exact date,
+        // instead of the date and time of when the Appointment instance
+        // was created.
+        // This is because new Date() is evaluated once, when the
+        // Appointment model is first created, 
+        // and not re-evaluated every time a new instance is created.
+        // Here's how to fix this:
+        var Kitten = Backbone.Model.extend({
+          defaults: function(){
+            return {
+              name: 'Kitty',
+              date: new Date()
+            }
+          }
+        });
+
+        
     }
 );
