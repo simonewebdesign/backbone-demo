@@ -102,7 +102,7 @@ define(["jquery", "underscore", "backbone-amd"], function ($, _, Backbone) {
         kettyKittyView.render();
         $('#container').append(kettyKittyView.el);
 
-        // LEVEL 3 -------------------------------------
+        // LEVEL 3 and 4 -------------------------------------
 
         // THE MODEL
         var CoolKitten = Backbone.Model.extend({
@@ -119,6 +119,17 @@ define(["jquery", "underscore", "backbone-amd"], function ($, _, Backbone) {
               birthday: new Date(),
               is_wild: true
             }
+          },
+
+          // custom function
+          toggleWildness: function(){
+            if (this.get('is_wild') === false){
+              this.set({is_wild: true});
+            } else {
+              this.set({is_wild: false});
+            }
+
+            this.save();
           }
         });
 
@@ -131,9 +142,9 @@ define(["jquery", "underscore", "backbone-amd"], function ($, _, Backbone) {
           // use the underscore template
           template: _.template('<li>Name: <%= name %></li>' + 
             '<li>Age: <%= age %></li>' +
-            '<li><%= description %></li>' +
-            '<li><%= birthday %></li>' +
-            '<li><input type="checkbox"> <%= is_wild %></li>'),
+            '<li>Description: <%= description %></li>' +
+            '<li>Birthday: <%= birthday %></li>' +
+            '<li><input type="checkbox" <% if(is_wild) print("checked") %>/> Wild</li>'),
 
           // the render function
           render: function(){
@@ -142,14 +153,31 @@ define(["jquery", "underscore", "backbone-amd"], function ($, _, Backbone) {
             this.$el.html(this.template(attributes));
           },
 
+          remove: function(){
+            this.$el.remove();
+          },
+
           // some simple events
           events: {
-            'dblclick li': 'alertSomethingVeryShitty' 
+            'dblclick li': 'alertSomethingVeryShitty',
+            'change input': 'toggleWildness'
           },
 
           // custom function
           alertSomethingVeryShitty: function(){
             alert("Something very shitty!");
+          },
+
+          // another custom function
+          toggleWildness: function(){
+            this.model.toggleWildness();
+          },
+
+          // listen for changes and re-render the view instance
+          initialize: function(){
+            // on(event, function, context)
+            this.model.on('change', this.render, this);
+            this.model.on('destroy', this.remove, this);
           }
         });
 
