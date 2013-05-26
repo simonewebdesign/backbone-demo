@@ -62,14 +62,44 @@ define(["jquery", "underscore", "backbone-amd"], function ($, _, Backbone) {
         // and not re-evaluated every time a new instance is created.
         // Here's how to fix this:
         var Kitten = Backbone.Model.extend({
+          // set defaults
           defaults: function(){
             return {
-              name: 'Kitty',
-              date: new Date()
+              name: 'Anonymous Kitty',
+              age: 0,
+              //description: '',
+              birthday: new Date(),
+              is_wild: true
             }
+          },
+          // URL to web service
+          urlRoot: 'http://localhost:3000/kittens'
+        });
+
+        // Fetch a RESTful Web Service
+        var ketty = new Kitten({id: 1});
+        var xhr = ketty.fetch({
+          success: function() {
+            console.log('ketty fetched successfully:');
+            console.log(ketty.toJSON());
           }
         });
 
-        
+        ketty.on('change', function(){
+          // alert('ketty dataset changed!');
+          kettyKittyView.render();
+        });
+
+        $('#add-year').on('click', function(){
+          ketty.set({
+            age: ketty.get('age') + 1
+          });
+          ketty.save();
+        });
+
+        // Create a new instance of KittyView (ViewModel)
+        var kettyKittyView = new PuppyView({model: ketty});
+        kettyKittyView.render();
+        $('#container').append(kettyKittyView.el);
     }
 );

@@ -8,7 +8,7 @@ requirejs.config({
     //enforceDefine: true,
 
     // path to external libraries
-    baseUrl: "lib",
+    baseUrl: "backbone-demo/lib",
 
     // cache busting
     // This only works for the modules; 
