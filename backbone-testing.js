@@ -8,7 +8,7 @@ define(["jquery", "underscore", "backbone-amd"], function ($, _, Backbone) {
 
         // Real Testing starts here!
 
-        // LEVEL 1 -------------------------------------       
+        // LEVEL 1 -------------------------------------
         
         // Model
         var Puppy = Backbone.Model.extend({}); // watch out the CASE!!!
@@ -101,5 +101,70 @@ define(["jquery", "underscore", "backbone-amd"], function ($, _, Backbone) {
         var kettyKittyView = new PuppyView({model: ketty});
         kettyKittyView.render();
         $('#container').append(kettyKittyView.el);
+
+        // LEVEL 3 -------------------------------------
+
+        // THE MODEL
+        var CoolKitten = Backbone.Model.extend({
+
+          // URL to web service
+          urlRoot: 'http://localhost:3000/kittens',
+
+          // set defaults
+          defaults: function(){
+            return {
+              name: 'Anonymous (but cool) Kitty',
+              age: 0,
+              description: '',
+              birthday: new Date(),
+              is_wild: true
+            }
+          }
+        });
+
+        // THE VIEW
+        var CoolKittenView = Backbone.View.extend({
+          // set parent $el attributes
+          tagName: 'ul',
+          className: 'cool-kitten',
+
+          // use the underscore template
+          template: _.template('<li>Name: <%= name %></li>' + 
+            '<li>Age: <%= age %></li>' +
+            '<li><%= description %></li>' +
+            '<li><%= birthday %></li>' +
+            '<li><input type="checkbox"> <%= is_wild %></li>'),
+
+          // the render function
+          render: function(){
+            var attributes = this.model.toJSON();
+            // binding attributes to the template
+            this.$el.html(this.template(attributes));
+          },
+
+          // some simple events
+          events: {
+            'dblclick li': 'alertSomethingVeryShitty' 
+          },
+
+          // custom function
+          alertSomethingVeryShitty: function(){
+            alert("Something very shitty!");
+          }
+        });
+
+        // instantiate a new CoolKitten
+        var coolKitten = new CoolKitten({
+          name: 'Gatto Simpatico',
+          age: 16,
+          is_wild: false
+        });
+
+        // instantiate a new CoolKittenView
+        var coolKittenView = new CoolKittenView({model: coolKitten});
+
+        // render the view
+        coolKittenView.render();
+        $('#kittens').html(coolKittenView.el);
     }
 );
